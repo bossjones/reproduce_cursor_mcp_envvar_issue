@@ -1,6 +1,6 @@
 # reproduce_cursor_mcp_envvar_issue
 
-> NOTE: This repo will only focus on `.cursor/mcp-server-shims/mcp-server-perplexity.sh`
+> NOTE: This repo focuses on demonstrating the issue with environment variable loading in Cursor's Model Context Protocol (MCP) implementation, particularly with `.cursor/mcp-server-shims/mcp-server-perplexity.sh`.
 
 Repository to reproduce an issue with loading environment variables in Cursor's Model Context Protocol (MCP) implementation.
 
@@ -12,10 +12,30 @@ This repository was created to reproduce an issue encountered while working with
 
 The issue occurs when attempting to set up a secure MCP configuration that doesn't require hardcoding sensitive API keys directly in the `mcp.json` configuration file. When loading environment variables from a `.env` file using a shell script, the variables are not properly passed to the MCP server process, despite working correctly when the script is run directly from the terminal.
 
+## Repository Structure
+
+```
+.
+├── README.md               # This documentation file
+├── Makefile                # Contains commands to help test and reproduce the issue
+├── .cursor/                # Cursor IDE configuration directory
+│   ├── mcp.json            # Current MCP configuration (may not work with env vars)
+│   ├── mcp-broken.json     # Example of broken configuration (for reference)
+│   ├── mcp-working.json    # Example of working configuration (with env vars hardcoded)
+│   └── mcp-server-shims/   # Directory containing shell scripts for MCP servers
+│       ├── mcp-server-perplexity.sh  # Main script demonstrating the issue
+│       ├── mcp-server-github.sh      # GitHub MCP server script
+│       ├── mcp-server-brave-search.sh # Brave Search MCP server script
+│       ├── mcp-server-firecrawl.sh   # Firecrawl MCP server script
+│       ├── .env                      # Your actual environment variables (gitignored)
+│       └── .env.sample               # Template for environment variables
+└── .gitignore              # Standard gitignore file
+```
+
 ## Requirements
 
 - Cursor IDE (latest version)
-- Node.js environment with `uvx` command available
+- Node.js environment with `uv`/`uvx` command available
 - Perplexity API key for testing
 
 ```bash
@@ -25,8 +45,11 @@ $ cursor --version
 $ node --version
 # Should be v16+ or later
 
-$ npm list -g uvx
-# Should show uvx is installed globally
+$ uv --version
+# Should show uv is installed globally
+
+$ which uvx
+# Should show path to uvx command
 ```
 
 ## Setup
@@ -40,29 +63,19 @@ cd reproduce_cursor_mcp_envvar_issue
 
 ### 2. Create a `.env` file in the `.cursor/mcp-server-shims` directory
 
-```bash
-mkdir -p .cursor/mcp-server-shims
-```
+The repository already contains a `.cursor/mcp-server-shims` directory with:
+- `.env.sample` file showing expected environment variables
+- Shell scripts for various MCP servers including `mcp-server-perplexity.sh`
 
-You can either create a new `.env` file:
-```bash
-touch .cursor/mcp-server-shims/.env
-```
+You'll need to create or modify the `.env` file to include your API keys:
 
-Or copy and modify the provided `.env.sample` file:
 ```bash
 cp .cursor/mcp-server-shims/.env.sample .cursor/mcp-server-shims/.env
 ```
 
 ### 3. Add your API keys to the `.env` file
 
-If you created a new `.env` file, add at minimum your Perplexity API key:
-
-```bash
-echo "PERPLEXITY_API_KEY=your_api_key_here" > .cursor/mcp-server-shims/.env
-```
-
-If you copied `.env.sample`, edit the `.env` file and replace the "REDACTED" values with your actual API keys:
+Edit the `.env` file and replace the "REDACTED" values with your actual API keys:
 
 ```bash
 # Example of what your .env file should look like
@@ -70,9 +83,9 @@ PERPLEXITY_API_KEY="your_perplexity_api_key_here"
 # ... other optional API keys as needed ...
 ```
 
-### 4. Create the shell script to load environment variables
+### 4. Review the shell script used to load environment variables
 
-Create a file at `.cursor/mcp-server-shims/mcp-server-perplexity.sh` with the following content:
+The repository includes a shell script at `.cursor/mcp-server-shims/mcp-server-perplexity.sh` with the following content:
 
 ```bash
 #!/usr/bin/env zsh
@@ -81,27 +94,68 @@ Create a file at `.cursor/mcp-server-shims/mcp-server-perplexity.sh` with the fo
 SCRIPT_DIR="$(cd "$(dirname "${(%):-%N}")" && pwd)"
 REPO_ROOT="$(cd "$(dirname "${(%):-%N}")" && cd ../.. && pwd)"
 
-# Load environment variables from .env file in the same directory as the script
+# Load and export environment variables from .env file
 if [ -f "$SCRIPT_DIR/.env" ]; then
-  . "$SCRIPT_DIR/.env"
-  export PERPLEXITY_API_KEY
-  export $(grep -v '^#' "$SCRIPT_DIR/.env" | xargs)
+    # Export all variables from the .env file, excluding comments
+    set -a  # Automatically export all variables
+    source "$SCRIPT_DIR/.env"
+    set +a  # Turn off automatic exports
 fi
 
 # Run the uvx command
-uvx mcp-server-perplexity
+uvx --directory $REPO_ROOT mcp-server-perplexity
 ```
 
-### 5. Make the script executable
+### 5. Make sure the script is executable
 
 ```bash
 chmod +x .cursor/mcp-server-shims/mcp-server-perplexity.sh
 ```
 
-### 6. Create the `mcp.json` configuration file
+### 6. Review the MCP configuration
 
-Create a file at `.cursor/mcp.json` with the following content:
+The repository includes three MCP configuration files:
+- `.cursor/mcp.json` - Current configuration
+- `.cursor/mcp-broken.json` - Example of a configuration that doesn't work
+- `.cursor/mcp-working.json` - Example of a configuration that works (with env vars in the config)
 
+## How to Reproduce the Issue
+
+### 1. Test the shell script directly
+
+Run the following to verify the shell script works when executed directly:
+
+```bash
+make start-mcp-perplexity
+```
+
+Or directly with:
+
+```bash
+.cursor/mcp-server-shims/mcp-server-perplexity.sh
+```
+
+This should run without errors, correctly loading the environment variables.
+
+### 2. Test using the MCP Inspector
+
+```bash
+npx @modelcontextprotocol/inspector .cursor/mcp-server-shims/mcp-server-perplexity.sh
+```
+
+You'll likely see an error indicating that the `PERPLEXITY_API_KEY` environment variable is not available to the MCP server, even though it's being exported in the shell script.
+
+### 3. Reproduce the issue in Cursor
+
+1. Open the project in Cursor
+2. Try to use the Perplexity MCP function in Cursor
+3. Check the Dev Tools console for errors related to missing API keys
+
+## Differences Between Working and Broken Configurations
+
+The key difference between the working and broken configurations:
+
+### Broken Configuration (mcp-broken.json)
 ```json
 {
   "Perplexity": {
@@ -110,34 +164,26 @@ Create a file at `.cursor/mcp.json` with the following content:
 }
 ```
 
-## How to Reproduce the Issue
-
-### 1. Verify the shell script works directly in the terminal
-
-```bash
-cd /path/to/reproduce_cursor_mcp_envvar_issue
-.cursor/mcp-server-shims/mcp-server-perplexity.sh
+### Working Configuration (mcp-working.json)
+```json
+{
+  "mcp-server-perplexity.sh": {
+    "command": "/absolute/path/to/reproduce_cursor_mcp_envvar_issue/.cursor/mcp-server-shims/mcp-server-perplexity.sh",
+    "env": {
+      "PERPLEXITY_API_KEY": "your_api_key_here"
+    }
+  }
+}
 ```
 
-The script should run without errors when executed directly from the terminal, correctly loading the environment variables.
-
-### 2. Test using the MCP Inspector
-
-```bash
-npx @modelcontextprotocol/inspector .cursor/mcp-server-shims/mcp-server-perplexity.sh
-```
-
-You should see an error indicating that the `PERPLEXITY_API_KEY` environment variable is not available to the MCP server, even though it's being exported in the shell script.
-
-### 3. Reproduce the issue in Cursor
-
-1. Open the project in Cursor
-2. Try to use the Perplexity MCP function in Cursor
-3. Check the Dev Tools console for errors related to missing API keys
+The working configuration includes:
+1. The server name matching the script filename (`mcp-server-perplexity.sh`)
+2. An absolute path to the script
+3. Explicitly defining environment variables in the config
 
 ## Workarounds
 
-There are two workarounds for this issue:
+There are two main workarounds for this issue:
 
 ### Workaround 1: Include Environment Variables in `mcp.json`
 
@@ -158,7 +204,7 @@ Modify `.cursor/mcp.json` to directly include environment variables:
 
 ### Workaround 2: Pass Directory Parameter and Include Environment Variables
 
-1. Modify the script to include a directory parameter:
+1. Modify the script to include a directory parameter (already implemented in the provided script):
 
 ```bash
 #!/usr/bin/env zsh
@@ -169,9 +215,9 @@ REPO_ROOT="$(cd "$(dirname "${(%):-%N}")" && cd ../.. && pwd)"
 
 # Load environment variables from .env file in the same directory as the script
 if [ -f "$SCRIPT_DIR/.env" ]; then
-  . "$SCRIPT_DIR/.env"
-  export PERPLEXITY_API_KEY
-  export $(grep -v '^#' "$SCRIPT_DIR/.env" | xargs)
+    set -a
+    source "$SCRIPT_DIR/.env"
+    set +a
 fi
 
 # Run the uvx command with directory parameter
@@ -191,29 +237,41 @@ uvx --directory $REPO_ROOT mcp-server-perplexity
 }
 ```
 
-## Additional Testing Notes
+## Testing Resources
 
-### 1. Testing with Different Shell Script Loading Methods
-
-Several approaches to loading environment variables in the shell script were tested, all with the same result:
+The repository includes a Makefile with helpful commands:
 
 ```bash
-# Approach 1: Direct export
-if [ -f "$SCRIPT_DIR/.env" ]; then
-  export $(grep -v '^#' "$SCRIPT_DIR/.env" | xargs)
-fi
+# Show available commands
+make help
 
-# Approach 2: Source and explicit export
-if [ -f "$SCRIPT_DIR/.env" ]; then
-  . "$SCRIPT_DIR/.env"
-  export PERPLEXITY_API_KEY
-fi
+# Start the Perplexity MCP server directly (useful for testing)
+make start-mcp-perplexity
+```
 
-# Approach 3: Using set -a
+## Additional Testing Notes
+
+### 1. Different Shell Script Loading Methods Tested
+
+The repository includes implementation of the following approaches for loading environment variables, all with the same result:
+
+```bash
+# Approach 1: Set -a method (used in current script)
 if [ -f "$SCRIPT_DIR/.env" ]; then
   set -a
   source "$SCRIPT_DIR/.env"
   set +a
+fi
+
+# Approach 2: Direct export
+if [ -f "$SCRIPT_DIR/.env" ]; then
+  export $(grep -v '^#' "$SCRIPT_DIR/.env" | xargs)
+fi
+
+# Approach 3: Source and explicit export
+if [ -f "$SCRIPT_DIR/.env" ]; then
+  . "$SCRIPT_DIR/.env"
+  export PERPLEXITY_API_KEY
 fi
 ```
 
@@ -228,4 +286,4 @@ None of these approaches successfully passed the environment variables to the MC
 
 ## Conclusion
 
-This issue makes it difficult to use environment variables securely with Cursor MCP without committing sensitive information to the repository. The current workarounds all involve storing sensitive information in the `mcp.json` file, which is not ideal for security-conscious applications.
+This issue makes it difficult to use environment variables securely with Cursor MCP without committing sensitive information to the repository. The current workarounds all involve storing sensitive information in the `mcp.json` file, which is not ideal for security-conscious applications. We hope this repository helps demonstrate the issue and contributes to its resolution in future Cursor updates.
