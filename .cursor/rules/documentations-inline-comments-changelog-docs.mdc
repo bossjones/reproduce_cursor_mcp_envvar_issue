@@ -1,0 +1,303 @@
+---
+description: Documentation standards for AI-augmented development, including prompt documentation, inline comments, and system architecture documentation. These rules must be followed for all documentation activities.
+globs: ["**/*.md", "**/*.py", "**/*.mdc", "**/*.mdx"]
+---
+
+# AI-Augmented Development Documentation Standards
+
+This comprehensive guide outlines documentation standards for maintaining high-quality documentation across the AI prompt engineering library. These standards apply to all prompt development, documentation updates, and system modifications. These rules MUST be followed for all documentation activities without exception.
+
+## Core Documentation Principles
+
+1. **AI-Augmented Documentation Management**
+   - Maintain comprehensive documentation for all prompts and AI workflows
+   - Include descriptive inline comments in prompt files and NEVER remove existing comments
+   - Ensure quantum-detailed documentation of prompt behavior and interactions
+   - Provide context about how prompts fit into larger AI systems
+   - Maintain cross-references between related prompts and documentation
+   - Keep documentation synchronized with prompt evolution
+   - Automate documentation updates where possible
+   - Remove documentation ONLY if the feature/prompt is explicitly deprecated
+
+2. **Documentation Categories**
+
+   A. **Prompt Documentation**
+   Every prompt must include:
+   - Clear description of purpose and capabilities
+   - Input/output specifications and examples
+   - Model compatibility information (Claude, GPT, Gemini)
+   - Required context and system messages
+   - Performance characteristics and token usage
+   - Error handling and edge cases
+   - Version history and changelog
+   - Success metrics and validation criteria
+   - Dependency listings and requirements
+   - Security and safety considerations
+   - Real-world usage examples
+   - Known limitations and constraints
+   - Quantum documentation maintained by AI
+
+   B. **Domain-Specific Documentation**
+   Each domain requires:
+   - Domain-specific prompt patterns
+   - Implementation guidelines
+   - Best practices for the domain
+   - Common pitfalls and solutions
+   - Performance optimization tips
+   - Security and safety considerations
+   - Usage examples and case studies
+   - Integration patterns
+   - Comprehensive dependency mapping
+   - Change history tracking
+   - Domain-specific edge cases
+   - Integration testing guidelines
+
+   C. **System Documentation**
+   All AI systems must document:
+   - Prompt chain architecture
+   - Model interaction patterns
+   - Response handling strategies
+   - Error recovery mechanisms
+   - Performance monitoring
+   - Safety measures
+   - Real-time updates
+   - System dependencies
+   - Integration points
+   - Failure modes and recovery
+   - Security implications
+   - Resource requirements
+
+3. **Project Documentation Structure**
+
+   Root Level Documentation:
+   - README.md: Project overview and quick start
+   - ARCHITECTURE.md: AI system design documentation
+   - CHANGELOG.md: Version-tracked prompt and system changes
+   - SECURITY.md: Security considerations and guidelines
+   - CONTRIBUTING.md: Contribution guidelines
+   - TESTING.md: Testing and validation procedures
+
+   Domain-Specific Documentation:
+   - /prompts/domains/[domain]/README.md: Domain-specific guidelines
+   - /prompts/components/README.md: Reusable component documentation
+   - /prompts/examples/README.md: Example implementations
+   - /prompts/tests/README.md: Testing documentation
+   - /prompts/security/README.md: Security guidelines
+
+4. **Quality Standards**
+
+   Completeness:
+   - Full coverage of all prompts and workflows
+   - Comprehensive interaction patterns
+   - Clear context and purpose
+   - Practical usage examples
+   - Error handling scenarios
+   - Performance characteristics
+   - Security implications
+   - Integration patterns
+   - Testing requirements
+
+   Accuracy:
+   - Technical verification across models
+   - Real-time synchronization
+   - Consistency in responses
+   - Version-specific documentation
+   - Validation results
+   - Cross-reference verification
+   - Security validation
+   - Performance validation
+
+   Accessibility:
+   - Clear organization by domain
+   - Intuitive navigation
+   - Searchable content
+   - Progressive complexity
+   - Quick reference guides
+   - Clear readability
+   - Consistent formatting
+   - Proper indexing
+
+5. **Update Protocol**
+
+   Documentation updates are triggered by:
+   - New prompt creation
+   - Prompt enhancements
+   - System changes
+   - Performance improvements
+   - Security updates
+   - Best practices evolution
+   - Bug fixes
+   - Dependency updates
+   - Model updates
+   - API changes
+
+   Required Actions:
+   - Update prompt documentation
+   - Refresh example outputs
+   - Update domain guidelines
+   - Sync validation results
+   - Update changelogs
+   - Verify cross-references
+   - Update security documentation
+   - Refresh architecture diagrams
+   - Update performance metrics
+   - Validate all examples
+
+   Verification Steps:
+   - Test prompt effectiveness
+   - Validate documentation accuracy
+   - Check cross-references
+   - Verify examples
+   - Test across models
+   - Update metrics
+   - Security review
+   - Performance validation
+   - Integration testing
+   - User acceptance testing
+
+## Documentation Types
+
+1. **Prompt Files**
+   Each prompt file (.mdc) must include:
+   ```markdown
+   ---
+   description: Clear description of prompt purpose
+   models: [List of compatible models]
+   version: Semantic version number
+   last_tested: Date of last validation
+   success_rate: Validation success rate
+   security_review: Date of last security review
+   performance_metrics: {
+     token_usage: average tokens per request,
+     response_time: average response time,
+     success_rate: validation success rate
+   }
+   dependencies: [List of required components/prompts]
+   ---
+
+   # Prompt Title
+
+   ## Purpose
+   [Clear explanation of what this prompt does]
+
+   ## Input Requirements
+   [Required context and parameters]
+
+   ## Output Format
+   [Expected response format]
+
+   ## Examples
+   [At least 3 input/output examples]
+
+   ## Validation
+   [Test cases and success criteria]
+
+   ## Performance
+   [Token usage and response time metrics]
+
+   ## Error Handling
+   [Common errors and recovery strategies]
+
+   ## Security Considerations
+   [Security implications and mitigations]
+
+   ## Dependencies
+   [Required components and systems]
+
+   ## Limitations
+   [Known constraints and limitations]
+
+   ## Changelog
+   [Version history with changes]
+   ```
+
+2. **Domain Documentation**
+   Each domain directory must contain:
+   ```markdown
+   # Domain Name
+
+   ## Overview
+   [Domain-specific patterns and practices]
+
+   ## Best Practices
+   [Guidelines for this domain]
+
+   ## Common Patterns
+   [Reusable prompt patterns]
+
+   ## Examples
+   [Domain-specific examples]
+
+   ## Integration
+   [Integration patterns]
+
+   ## Testing
+   [Validation approaches]
+
+   ## Security
+   [Domain-specific security considerations]
+
+   ## Performance
+   [Performance guidelines and metrics]
+
+   ## Troubleshooting
+   [Common issues and solutions]
+
+   ## Changelog
+   [Version history]
+   ```
+
+3. **System Documentation**
+   System-level docs must include:
+   ```markdown
+   # System Component
+
+   ## Architecture
+   [Component interaction patterns]
+
+   ## Prompt Chains
+   [Flow diagrams and explanations]
+
+   ## Performance
+   [Metrics and optimization]
+
+   ## Security
+   [Safety measures]
+
+   ## Monitoring
+   [Observability practices]
+
+   ## Dependencies
+   [System dependencies]
+
+   ## Integration
+   [Integration points]
+
+   ## Error Handling
+   [Error recovery procedures]
+
+   ## Maintenance
+   [Maintenance procedures]
+
+   ## Changelog
+   [Version history]
+   ```
+
+## Important Notes:
+- All documentation must be version-controlled
+- The @docs/ and @.cursor/ directories are the source of truth
+- Each prompt domain must maintain its specific documentation
+- Documentation must be validated across all supported models
+- Examples must be tested and verified regularly
+- Performance metrics must be updated with each change
+- Security implications must be documented for all prompts
+- Cross-references must be maintained and verified
+- Changelog entries must be detailed and clear
+- Documentation must evolve with prompt improvements
+- Never remove existing comments without explicit deprecation
+- All changes must be reviewed and validated
+- Documentation must be quantum-detailed
+- Real-time updates must be maintained
+- Security implications must be thoroughly documented
+
+This system ensures comprehensive documentation of AI-augmented development practices while maintaining high standards for knowledge retention and system understanding. Follow these guidelines strictly for all documentation activities.

@@ -1,0 +1,228 @@
+---
+description: Memory and task management system for AI-augmented development workflows
+globs: ["**/*.md", "**/*.py", "**/*.mdc"]
+---
+
+This document serves as your comprehensive guide for AI-augmented development workflows. Throughout all user interactions, you must maintain three key files: @memories.md for interaction history, @lessons-learned.md for knowledge retention, and @scratchpad.md for active task management.
+
+CORE DEVELOPMENT PRINCIPLES:
+- Maintain consistent, high-quality prompt engineering practices
+- Write clear, reusable prompts with comprehensive documentation
+- Ensure all prompts include proper input/output examples and validation criteria
+- Follow domain-specific best practices for each type of development task
+- Use your chain of thought with tree of thought for complex problem-solving
+- Cross-reference with @memories.md, @lessons-learned.md, project-requirements.md, and @scratchpad.md for context
+- Ensure all prompts support proper error handling and edge cases
+- Optimize prompts for different LLM models (Claude, GPT, Gemini)
+- Treat each interaction as a teaching opportunity by explaining concepts clearly
+- Document rationale behind decisions and design choices
+- Maintain strict attention to detail and consistency
+
+MODE SYSTEM OPERATION:
+The Mode System is your primary operational framework for managing prompt development and task execution:
+
+1. Plan Mode (Triggered by "plan"):
+Create a new Chat Session with exact format in the scratchpad.md file:
+# Mode: PLAN 🎯
+Current Task: [Extract task from user input - be specific and detailed]
+Domain: [Identify relevant domain - web/mobile/backend/ml/sre]
+Understanding: [List all requirements and constraints identified]
+Questions: [Number each question clearly]
+Confidence: [Calculate as percentage based on unknowns]
+Next Steps: [Bullet point each required action]
+Dependencies: [List any required resources or prerequisites]
+Impact Assessment: [Potential effects on existing prompts/systems]
+
+2. Processing Steps (Mandatory):
+- Parse user input for prompt requirements
+- Cross-reference with project requirements
+- Generate minimum 3 clarifying questions
+- Calculate initial confidence score
+- Create task breakdown in Scratchpad
+- Monitor and update confidence after each user response
+- Continue question loop until 95%-100% confidence achieved
+- Verify all dependencies and prerequisites
+- Assess potential impacts on existing systems
+
+3. Agent Mode (Triggered by "agent"):
+Activation Requirements (ALL must be met):
+- Confidence level ≥ 95%
+- All clarifying questions answered
+- Tasks defined in Scratchpad
+- No blocking issues identified
+- Project requirements verified
+- Dependencies resolved
+- Impact assessment completed
+
+Enabled Capabilities (Only when activated):
+- Prompt creation/modification
+- Documentation updates
+- File operations
+- Testing and validation
+- Quality checks
+- Scratchpad updates
+- System integration verification
+- Performance monitoring
+
+MODE SYSTEM TYPES:
+1. Implementation Type (New Prompts/Features):
+   - Trigger: User requests new prompt implementation
+   - Format: MODE: Implementation, FOCUS: New functionality
+   - Requirements: Detailed planning, domain review, documentation
+   - Process: Plan mode (🎯) → 95% confidence → Agent mode (⚡)
+   - Validation: Test cases, model consistency, error handling
+
+2. Enhancement Type (Prompt Improvement):
+   - Trigger: User requests prompt optimization
+   - Format: MODE: Enhancement, FOCUS: Improvement
+   - Requirements: Current state analysis, improvement opportunities, validation
+   - Process: Plan mode (🎯) → Chain of thought analysis → Agent mode (⚡)
+   - Validation: Performance metrics, response quality, consistency
+
+3. Bug Fix Type (Issue Resolution):
+   - Trigger: User reports prompt/response issues
+   - Format: MODE: Bug Fix, FOCUS: Issue resolution
+   - Requirements: Problem diagnosis, root cause analysis, solution verification
+   - Process: Plan mode (🎯) → Chain of thought debugging → Agent mode (⚡)
+   - Validation: Issue resolution, regression testing
+
+SCRATCHPAD MANAGEMENT:
+The Scratchpad system (@scratchpad.md) tracks prompt development and improvements:
+
+1. Phase Structure (Required format):
+```
+Current Phase: [PHASE-X]
+Domain Context: [web/mobile/backend/ml/sre]
+Status: [Active/Planning/Review]
+Confidence: [Current percentage]
+Last Updated: [Version]
+
+Tasks:
+[ID-001] Description
+Status: [ ] Priority: [High/Medium/Low]
+Dependencies: [List any blockers]
+Progress Notes:
+- [Version] Update details
+```
+
+2. Progress Tracking Rules:
+- Use ONLY these markers:
+  [X] = Completed (100% done, validated)
+  [-] = In Progress (actively being worked on)
+  [ ] = Planned (not started)
+  [!] = Blocked (has dependencies)
+  [?] = Needs Review (requires validation)
+
+3. Task Management Protocol:
+- Generate unique ID for each task
+- Link tasks to specific domains
+- Update status in real-time
+- Document all changes with timestamps
+- Track dependencies explicitly
+- Maintain task hierarchy
+- Cross-reference with memories
+
+4. Phase Transition Rules:
+- Clear completed phase content
+- Archive to /docs/phases/PHASE-X/
+- Initialize new phase structure
+- Transfer relevant tasks
+- Update confidence metrics
+- Validate transitions
+- Document phase completion
+
+5. Integration Requirements:
+- Sync with Mode System state
+- Update on confidence changes
+- Track all user interactions
+- Maintain task relationships
+- Document decision points
+- Link to relevant memories
+- Verify system integrity
+
+MEMORY TRACKING AND DOCUMENTATION PROTOCOL:
+The @memories.md file captures all prompt engineering activities and decisions in chronological order:
+
+For development activities (prompt creation, enhancement, testing):
+- [Version] Development: Document prompt changes, implementation details, validation results, and impact on the system. Example: "[v1.0.2] Development: Created new web development prompt for React component architecture, including TypeScript interfaces, accessibility guidelines, and performance optimization recommendations. Validated across multiple LLM models with 98% consistency."
+
+For documentation activities:
+- [Version] Documentation: Record comprehensive details of prompt patterns, best practices, and usage guidelines. Example: "[v1.1.0] Documentation: Updated mobile development prompt guidelines to include new sections for React Native optimization, platform-specific considerations, and cross-platform compatibility requirements."
+
+Memory Management Rules:
+- Maintain strict chronological ordering
+- Never delete past entries
+- Use long single line plain text format
+- Create overflow files (@memories2.md, etc.) when exceeding 1000 lines
+- Cross-reference between memory files
+- Tag entries appropriately (#feature, #enhancement, #bugfix)
+- Include timestamps and entry types
+- Update after every interaction
+- Ensure searchability and tracking
+
+LESSONS LEARNED PROTOCOL:
+The @lessons-learned.md file captures prompt engineering insights and best practices:
+
+Format: [Timestamp] Category: Issue → Solution → Impact
+
+Categories:
+- Prompt Design (structure, clarity, reusability)
+- Model Interaction (response quality, consistency)
+- Domain-Specific (web, mobile, backend, ML, SRE)
+- Testing & Validation (coverage, effectiveness)
+- Documentation (clarity, completeness)
+- Performance (response time, token usage)
+- Error Handling (edge cases, recovery)
+- System Integration (compatibility, dependencies)
+
+Priority Levels:
+- Critical: Security issues, data integrity, breaking changes
+- Important: Accessibility, documentation, testing coverage
+- Enhancement: Optimization, refactoring, developer experience
+
+Entry Requirements:
+- Problem description
+- Solution details
+- Prevention strategy
+- Impact assessment
+- Examples when applicable
+- Related references
+- Validation criteria
+
+Example: "[2024-02-08 16:20] Prompt Design: Issue: Inconsistent responses across different LLMs → Fix: Implemented structured output format with clear validation rules → Why: Critical for ensuring consistent, high-quality responses across all supported models."
+
+PROJECT REQUIREMENTS ENFORCEMENT:
+Verify all prompt implementations against project requirements:
+- Proper documentation and examples
+- Clear input/output specifications
+- Validation criteria
+- Model compatibility
+- Domain-specific guidelines
+- Quality standards
+- Performance metrics
+- Security considerations
+- Error handling
+- Testing coverage
+
+⚠️ WARNING System:
+Issue warnings for any deviations from requirements:
+⚠️ WARNING: [Category]
+- Requirement: [Specific requirement not met]
+- Current State: [Current implementation]
+- Impact: [Potential issues]
+- Resolution: [Required changes]
+
+PHASE DOCUMENTATION:
+Document completed phases in /docs/phases/PHASE-X/[FEATURE-NAME].md:
+- Implemented prompts
+- Technical decisions
+- Usage examples
+- Best practices
+- Lessons learned
+- Success metrics
+- Memory references
+- Performance data
+- Test results
+- Future improvements
+
+This system ensures consistent, high-quality prompt engineering while maintaining comprehensive documentation and knowledge retention. Follow these guidelines strictly for all user interactions.

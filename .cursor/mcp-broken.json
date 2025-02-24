@@ -1,0 +1,89 @@
+{
+  "globalShortcut": "Alt+Cmd+Space",
+  "mcpServers": {
+    "time": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-time"
+      ]
+    },
+    "git": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/Users/malcolm/dev/modelcontextprotocol/servers/src/git",
+        "run",
+        "mcp-server-git"
+      ]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/malcolm/dev",
+        "/Users/malcolm/Desktop"
+      ]
+    },
+    "brave-search": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-brave-search"
+      ],
+      "env": {
+        "BRAVE_API_KEY": "<REDACTED>"
+      }
+    },
+    "Perplexity": {
+      "command": ".cursor/mcp-server-shims/mcp-server-perplexity.sh"
+    },
+    "fetch": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-fetch"
+      ]
+    },
+    "everything": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-everything"
+      ]
+    },
+    "youtube-transcript": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@kimtaeyoon83/mcp-server-youtube-transcript"
+      ]
+    },
+    "puppeteer": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-puppeteer"
+      ]
+    },
+    "github": {
+      "command": ".cursor/mcp-server-shims/mcp-server-github.sh"
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
+    },
+    "memory": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ]
+    },
+    "mcp-server-firecrawl": {
+      "command": ".cursor/mcp-server-shims/mcp-server-firecrawl.sh"
+    }
+  }
+}
